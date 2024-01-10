@@ -1,0 +1,231 @@
+.image-banner{
+    position: relative;
+    background: url(../Assets/Parkingbanner.jpg);
+ height: 25vh;
+ width: 100%;
+ display: flex;
+ background-size: cover;
+ background-position: center;
+ background-repeat: no-repeat;
+ align-items: center;
+ justify-content: center;
+}
+
+
+.login-container{
+ display:flex;
+ justify-content: center;
+ padding-top: 20px;
+}
+
+.login-form{
+display:flex;
+flex-direction: column;
+padding: 10px;
+border: 2px solid rgb(166, 182, 152);
+border-radius: 10px;
+width:350px;
+height: 450px;
+margin-top: 217px;
+}
+
+.login-form {
+ font-size: 30px;
+
+}
+
+.login-form label{
+ padding: 0px;
+ margin-top: 1px;
+ font-weight: 700;
+ font-size: 16px;
+}
+
+.login-form input {
+ padding: 5px;
+ border-radius: 5px;
+ margin:2px 0px;
+ border: 2px solid rgb(154,154,154);
+ font-size: 18px;
+ width: auto;
+ padding: 15px;
+}
+
+.login-form input:focus{
+ outline: 2px solid rgb(14, 199, 23); 
+ border: none;
+}
+
+.login-form button{
+ background-color:rgb(33, 160, 50);;
+ margin: 20px 0px;
+ border: none;
+ color: white;
+ font-size:20px;
+ font-weight: 600;
+ border-radius: 10px;
+ padding: 5px;
+}
+
+.login-form button:hover{
+background-color: rgb(4, 95, 39);
+/* color: rgb(37, 132, 161); */
+cursor:pointer;
+color: white;
+}
+
+.createNewaccdiv{
+ font-size: 20px;
+
+}
+.createNewaccdiv span{
+ margin: 6px;
+}
+
+.signupLabel{
+ text-decoration: none;
+ background-color:rgb(33, 160, 50); 
+ color: white;
+ padding-left: 6px;
+ padding-right: 6px;
+ padding-bottom: 6px;
+ border-radius: 5px;
+}
+
+.signupLabel:hover{
+background-color: rgb(4, 95, 39);
+cursor:pointer;
+color: white;
+}
+
+.header{
+ color: rgb(11, 20, 7);
+ font-weight: 800;
+ font-size: 40px;
+}
+/* Student Register css
+} */
+
+
+.signup-container{
+ display:flex;
+ justify-content: center;
+
+}
+
+.signup-form{
+display:flex;
+flex-direction: column;
+padding: 10px;
+border: 2px solid white;
+border-radius: 10px;
+width:450px;
+margin-top: 150px;
+height: 74vh;
+}
+
+.signup-form {
+ font-size: 30px;
+
+}
+
+.signup-form label{
+ padding: 0px;
+ margin-top: 16px;
+ font-weight: 700;
+ font-size: 16px;
+}
+
+.signup-form input, .signup-form textarea {
+ padding: 5px;
+ border-radius: 5px;
+ margin:2px 0px;
+ border: 2px solid rgb(184, 184, 184);
+ font-size: 18px;
+ width: 80%;
+ padding: 17px;
+}
+
+.signup-form input:focus, .signup-form textarea:focus{
+ outline: 2px solid rgb(33, 160, 50);
+ border: none;
+}
+
+.signup-form button{
+ background-color: rgb(33, 160, 50);
+ margin: 20px 0px;
+ border: none;
+ color: white;
+ font-size:20px;
+ font-weight: 600;
+ border-radius: 10px;
+ padding: 10px;
+ width: 50%;
+ margin: auto;
+}
+
+.signup-form button:hover{
+background-color: rgb(4, 95, 39);
+color: rgb(245, 253, 255);
+cursor:pointer;
+}
+
+.alreadyhaveaccdiv{
+ font-size: 20px;
+margin: auto;
+}
+.alreadyhaveaccdiv span{
+ margin: 6px;
+}
+
+.loginLabel{
+ text-decoration: none;
+ background-color:rgb(33, 160, 50); 
+ color: white;
+ padding-left: 6px;
+ padding-right: 6px;
+ padding-bottom: 6px;
+ border-radius: 5px;
+}
+
+.loginLabel:hover{
+background-color: rgb(4, 95, 39);
+color: rgb(243, 246, 247);
+cursor:pointer;
+}
+
+
+
+
+.buttons{
+ 
+ display: flex;
+ flex-direction: row;
+ justify-content: center;
+ margin: 10%;
+
+
+}
+
+.background {
+   position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: url("../Assets/background.jpg");
+    background-size: cover;
+    background-position: center;
+    filter: blur(10px);
+    z-index: -1;
+  }
+  
+.admin-login-form{
+   display:flex;
+flex-direction: column;
+padding: 10px;
+border: 2px solid rgb(166, 182, 152);
+border-radius: 10px;
+width:350px;
+height: 350px;
+margin-top: 217px;
+padding: 30px;
+}

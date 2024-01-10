@@ -1,0 +1,14 @@
+.inputs-location{
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    margin: auto;
+    flex-direction: column;
+    width: 300px;
+}
+
+.submitbtn{
+    background-color: #5fa430 !important;
+    color: white !important;
+    margin-top: 20px  !important;
+}

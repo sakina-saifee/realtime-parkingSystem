@@ -1,0 +1,49 @@
+.footer{
+    background-color: #5fa430;
+    width: 100vw;
+    height: 25vh;
+    margin-top: 100px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: white;
+   
+}
+
+.quicklinks{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+}
+
+*{
+    margin: 0;
+    padding: 0;
+}
+
+.About-Header{
+    color: rgb(2, 51, 9);
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+
+}
+.AboutSection{
+    display: flex;
+    flex-wrap: wrap;
+    background-color: rgb(221, 250, 197);
+    color: #5fa430;
+    margin-top: 60px;
+    border-radius: 20px;
+    width: 70%;
+    margin: auto;
+    margin-bottom: 0%;
+}
+.inner-about-section{
+    margin: 40px;
+}
+.aboutSectionText{
+    margin-top: 30px;
+}
