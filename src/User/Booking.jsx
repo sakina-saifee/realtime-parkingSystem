@@ -6,7 +6,7 @@ import './Booking.css';
 import RedCar from '../Assets/redcar.png';
 import { toast } from 'react-toastify';
 import { auth, db } from '../firebaseConfig/Firebase';
-import { onValue, push, ref, set } from 'firebase/database';
+import { onValue, push, ref, remove, set } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 import YellowCar from '../Assets/yellowcar.png';
 
@@ -32,9 +32,14 @@ const Booking = (props) => {
   });
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+
+  const [startDateDb, setStartDateDb] = useState(null);
+  const [endDateDb, setEndDateDb] = useState(null);
+
   const [slotno, setSlotNo] = useState(1);
   const [bookedSlots, setBookedSlots] = useState([]);
   const [bookedinfo, setbookedInfo] = useState([]);
+  const [viewfinaldata, setviewfinaldata] = useState([]);
 
   // Assuming props.selectedlocation.slots is a number
   const [open, setOpen] = useState(false);
@@ -56,17 +61,24 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
 
   // Event handlers that update the state variables
   const handleStartDateChange = (event) => {
+    const newStartDateString = event.target.value;
+    const newStartDate = new Date(newStartDateString); // Parse the date string
 
-    const newStartDate = event.target.value; // Capture the value from the date-time picker
-    setStartDate(newStartDate); // Update the state
+   const date= new Date(newStartDateString).getTime();
+
+    setStartDate(newStartDateString); // Update the state
+    setStartDateDb(date);
   };
 
   const handleEndDateChange = (event) => {
 
-    const newStartDate = event.target.value; // Capture the value from the date-time picker
+    const newStartDateString = event.target.value;
+    const newStartDate = new Date(newStartDateString); // Parse the date string
 
+   const date= new Date(newStartDateString).getTime();
 
-    setEndDate(newStartDate); // Update the state
+   setEndDate(newStartDateString); // Update the state
+    setEndDateDb(date);
   }
 
 
@@ -116,66 +128,152 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
     setSlotNo(slot);
 
   }
+  
+  const handleviewDetails = (i) => {
+    
+    setviewSlot(i)
 
-  const SubmitBookingDetails = () => {
-    console.log("end event", startDate);
-    console.log("start event", endDate);
-    console.log(loggeduser);
-    set(ref(db, 'userBooked/' + loggeduser?.uid), {
-      FullName: loggeduser.Username,
-      Email: loggeduser.Email,
-      DayBooked: day,
-      SlotNo: slotno,
-      StartDateTime: startDate,
-      EndDateTime: endDate,
-    }).then(() => {
-      toast.success("Youve Booked The Slot!");
-      setTimeout(() => {
-        setOpen(false);
-      }, 1000);
-      setBookedSlots((prevBookedSlots) => [...prevBookedSlots, slotno]);
-    })
-
-    push(ref(db, 'slotBooked/' + `${slotno}`), {
-      FullName: loggeduser.Username,
-      Email: loggeduser.Email,
-      DayBooked: day,
-      StartDateTime: startDate,
-      EndDateTime: endDate,
-      uid: loggeduser?.uid,
-    })
   }
+
+ 
 
   useEffect(() => {
 
 
+console.log("view slot use state", viewslot)
 
-    const dbRef = ref(db, 'slotBooked/' + `${slotno}`);
+    const dbRef = ref(db, `${props.MallNameviewparking}/`+`${viewslot}/`);
     onValue(dbRef, (snapshot) => {
-      // console.log("snapshot vlaues", snapshot);
-      const snapshotVal = snapshot?.val();
-      if (snapshotVal) {
-        const newData = Object.values(snapshotVal);
-        setbookedInfo(newData);
-        console.log("snapshot slot booked", newData);
-      }
+ 
+
+        const snapshotVal = snapshot.val();
+ 
+        console.log("snapshot vlaues new", snapshotVal);
+        if (snapshotVal==null) {
+          setviewSlotSelectedopen(false);
+          setViewOpen(false);
+        }else{
+          setviewSlotSelectedopen(true);
+          setViewOpen(true);
+
+          const newData = Object.values(snapshotVal);
+      
+          setbookedInfo(newData);
+          
+          console.log("snapshot slot booked", newData);
+        }
+      
+     
     });
 
 
-  }, []);
+  }, [viewslot]);
+
+  useEffect(()=>{
+    const newData = bookedinfo.map(job => Object.values(job)); // Transform each job to the desired structure
+    console.log("new data", newData.flat())
+    setviewfinaldata(newData.flat());
+
+  },[bookedinfo])
+
+const [itemskeys, setitemskeys]=useState([]);
+const [showdata, setshowdata]=useState(true);
 
 
 
 
 
 
-  const handleviewDetails = (i) => {
-    console.log("Hello");
-    setViewOpen(true);
-    setviewSlotSelectedopen(false);
-    setviewSlot(i)
+  const SubmitBookingDetails = () => {
+console.log("inside run ", viewfinaldata);
 
+let show =true;
+viewfinaldata.map((i)=>{
+  // if(i.StartDateTime==startDateDb && i.EndDateTime==endDateDb ){
+  //   setshowdata(false);
+  //   return 
+  // }
+
+  // if ((startDateDb > i.StartDateTime && endDateDb < i.EndDateTime) ||
+  // (startDateDb > i.StartDateTime && endDateDb <= i.EndDateTime) || 
+  // (startDateDb <= i.StartDateTime && endDateDb >= i.EndDateTime) || 
+  // (startDateDb == i.StartDateTime && endDateDb == i.EndDateTime)) { 
+  //   show=false;
+  //   toast.error("This slot is already been booked. Choose another slot!");
+  // }
+
+  if ((startDateDb < i.StartDateTime && endDateDb > i.StartDateTime) || 
+  (startDateDb < i.StartDateTime && endDateDb >= i.EndDateTime) || 
+  (startDateDb >= i.StartDateTime && startDateDb < i.EndDateTime && endDateDb >= i.EndDateTime) || 
+  (startDateDb >= i.StartDateTime && endDateDb <= i.EndDateTime) || 
+  (startDateDb == i.StartDateTime && endDateDb == i.EndDateTime) || 
+  (startDateDb <= i.StartDateTime && endDateDb >= i.EndDateTime) || 
+  (startDateDb < i.StartDateTime && endDateDb == i.StartDateTime) || 
+  (startDateDb == i.EndDateTime && endDateDb > i.EndDateTime)) { 
+show=false;
+toast.error("This slot is already been booked. Choose another slot!");
+return;
+}
+
+  console.log("condition start date ", i.StartDateTime, "condition end date ", i.EndDateTime,"condition start date on change ", startDateDb, "condition end date  on change", endDateDb, "eunnnnnnnnnnnnnnnn");
+})
+
+if(show){
+  const itemref=ref(db, 'userBooked/' + loggeduser?.uid);
+  const pushkeys=push(itemref)
+  
+  set(pushkeys,{
+    FullName: loggeduser.Username,
+    Email: loggeduser.Email,
+    DayBooked: day,
+    SlotNo: slotno,
+    StartDateTime: startDateDb,
+    EndDateTime: endDateDb,
+    PushKeys: pushkeys.key,
+    StartDateTimeString: startDate,
+    EndDateTimeString: endDate,
+
+  }).then(() => {
+    toast.success("Youve Booked The Slot!");
+    setitemskeys(pushkeys);
+    setTimeout(() => {
+      setOpen(false);
+    }, 1000);
+    setBookedSlots((prevBookedSlots) => [...prevBookedSlots, slotno]);
+  })
+
+
+  
+  const itemref2=ref(db, `${props.MallNameviewparking}/` + `${slotno}/`+`${loggeduser.uid}`);
+
+  const pushkeys2=push(itemref2);
+
+  set(pushkeys2, {
+    FullName: loggeduser.Username,
+    Email: loggeduser.Email,
+    DayBooked: day,
+    StartDateTime: startDateDb,
+    EndDateTime: endDateDb,
+    uid: loggeduser?.uid,
+    PushKeys: pushkeys2.key,
+    StartDateTimeString: startDate,
+    EndDateTimeString: endDate,
+  })
+
+
+}
+
+
+  
   }
+
+
+
+  const [bookedInfokeys , setbookedInfokeys]=useState([]);
+
+
+  
+
 
   useEffect(() => {
    
@@ -183,21 +281,36 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
       setviewSlotSelectedopen(true);
     }
 
-    console.log("view slot no", viewslot);
 
-  }, [viewslot]);
+  }, [bookedInfokeys]);
+
+  const handlecancelnow=(item,uniqueIdentifierForSlot)=>{
+
+
+    remove(ref(db, `${props.MallNameviewparking}` + `${slotno}/`+`${loggeduser.uid}/`+`${uniqueIdentifierForSlot}`)).then(()=>{
+      toast.warning("You cancelled the Slot");
+    })
+   
+     
+};
+  
+    
+      
+    
 
   const renderCarSlots = () => {
 
     if (!showSlots) return null;
 
-    const slots = props.selectedlocation.Slots;
+    const slots = props.selectedlocation?.Slots;
     // If slots is not a number or less than 1, don't render anything
     if (!slots || slots < 1) return null;
 
     const slotDivs = [];
     for (let i = 0; i < slots; i++) {
       const isBooked = bookedSlots.includes(i + 1);
+  
+   
       slotDivs.push(
         <div key={i} className='display-car-div'>
           {/* Content of car slot, e.g., a car image or slot number */}
@@ -247,21 +360,27 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
                          <th>Email</th>
                          <th>Start Date</th>
                          <th>End Date</th>
+                         <th>Action</th>
                        </tr>
 
                      </thead>
 
 
 
-                     {bookedinfo.map((item, index) => (
+                     {viewfinaldata.map((item, index) => 
+                     (
+
+
                        <>
                          <tbody>
                            <tr key={index}>
-                             <td>{item?.FullName.toUpperCase()}</td>
-                             <td>{item?.DayBooked.toUpperCase()}</td>
+                             <td>{item?.FullName?.toUpperCase()}</td>
+                             <td>{item?.DayBooked?.toUpperCase()}</td>
                              <td>{item?.Email}</td>
-                             <td>{item?.StartDateTime}</td>
-                             <td>{item?.EndDateTime}</td>
+                             <td>{new Date(item?.StartDateTimeString).toLocaleString()}</td>
+                             <td>{new Date(item?.EndDateTimeString).toLocaleString()}</td>
+                             <td>  {item?.Email==loggeduser.Email ?<Button className='cancel-btn' onClick={() => 
+              handlecancelnow((i+1),item?.PushKeys)} >Cancel Now</Button>:<></>} </td>
                             
                              
                            </tr>
@@ -292,12 +411,10 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
          </>: <></>}
             
             
-           
-           
 
             <div>
-              <Button className='bookNow-btn' onClick={() => handlebooknow(i + 1)}> Book Now</Button>
-              <Button className='cancel-btn' >Cancel Now</Button>
+              <Button className='bookNow-btn' onClick={() => handlebooknow(i+1)}> Book Now</Button>
+            
               <Modal
                 open={open}
                 onClose={handleClose}
@@ -380,7 +497,7 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
     } else {
       setShowSlots(true);
     }
-    console.log("ee")
+    
 
 
 
@@ -402,9 +519,9 @@ const [viewSlotSelectedopen, setviewSlotSelectedopen] = useState(false);
 
         <h1>Showing Book Parking Slot Now For </h1>
 
-        <p className='selectionlocation'>{props.selectedlocation.MallName.toUpperCase()}</p>
-        <p className='selectionlocation'>{props.selectedlocation.City.toUpperCase()}</p>
-        <p className='selectionlocation'>{props.selectedlocation.Floor.toUpperCase()}</p>
+        <p className='selectionlocation'>{props.selectedlocation?.MallName?.toUpperCase()}</p>
+        <p className='selectionlocation'>{props.selectedlocation?.City?.toUpperCase()}</p>
+        <p className='selectionlocation'>{props.selectedlocation?.Floor?.toUpperCase()}</p>
 
       </div>
 

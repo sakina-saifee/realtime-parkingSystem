@@ -40,13 +40,17 @@ const ViewParkingLocation = () => {
 
 
     return (
+
         <>
           
 
 
 
             {showBooking && parkinglocation && parkinglocation.length > 0 ?
-                <Booking selectedlocation={selectedlocation} /> : 
+           
+             <Booking selectedlocation={selectedlocation} MallNameviewparking={selectedlocation.MallName}/> 
+          
+               : 
 
                 <>
                   <div className='image-banner'>
